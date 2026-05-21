@@ -8,7 +8,6 @@
 /.gitattributes       export-ignore
 /.gitignore           export-ignore
 /composer.lock        export-ignore
-/package-lock.json    export-ignore
 /vendor               export-ignore
 /mix-manifest.json	  export-ignore
 /node_modules         export-ignore
