@@ -38,6 +38,10 @@ class Assets {
 
 		global $post;
 
+		if ( ! $post ) {
+			return;
+		}
+
 		if ( 'true' === get_post_meta( $post->ID, 'has_page_specific_css', true ) ) {
 			wp_enqueue_style( 'page-' . $post->ID, Generate_Files::get_file_url( $post->ID ), [], Generate_Files::get_file_version( $post->ID ), 'all' );
 		}
