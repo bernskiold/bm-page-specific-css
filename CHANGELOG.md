@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file. This projec
 
 ## [Unreleased]
 
+## [1.1.3] - 2026-05-21
+### Fixed
+- Fixed release archive
+
+
+## [Unreleased]
+
 ## [1.1.1] - 2023-03-24
 
 ### Fixed
