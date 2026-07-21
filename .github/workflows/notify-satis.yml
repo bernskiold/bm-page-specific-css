@@ -29,3 +29,6 @@ jobs:
                   token: ${{ secrets.SATIS_DISPATCH_TOKEN }}
                   repository: bernskiold/packages.bernskiold.com
                   event-type: build
+                  # Naming the repo lets Satis rescan only this one instead of
+                  # all of them. The URL must match satis.json exactly.
+                  client-payload: '{"repository_url": "https://github.com/${{ github.repository }}"}'
