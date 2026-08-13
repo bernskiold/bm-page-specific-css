@@ -1,0 +1,48 @@
+name: Build
+
+# The compiled bundle in assets/scripts/dist is committed and shipped in the
+# release archive, so a build that breaks — or committed output that has
+# drifted from its sources — reaches every site that installs the plugin.
+# Nothing checked that before, which is how the Laravel Mix toolchain was left
+# unable to build on any Node newer than 16.
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build editor assets
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install
+        run: npm ci --no-audit --no-fund
+
+      - name: Build
+        run: npm run build
+
+      - name: Check the committed bundle is in sync
+        run: |
+          if git diff --quiet -- assets/scripts/dist; then
+            echo "The committed bundle matches its sources."
+          else
+            echo "::error title=Bundle out of sync::Building changed assets/scripts/dist. Run 'npm run build' and commit the result, or the release will ship a stale bundle."
+            git diff --stat -- assets/scripts/dist
+            exit 1
+          fi

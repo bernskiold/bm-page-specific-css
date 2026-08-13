@@ -51,21 +51,29 @@ class Assets {
 	/**
 	 * Enqueue Scripts on admin side
 	 *
-	 * We want to allow the use of good script debugging here too,
-	 * so be mindful and use the SCRIPTS_DEBUG constant
-	 * to load both minified for production and non-minified files
-	 * for testing purposes.
+	 * The build writes a .asset.php next to the bundle holding the exact
+	 * script handles it was compiled against and a content hash, so we
+	 * read the dependencies from there instead of listing them by hand.
 	 **/
 	public static function block_editor_scripts() {
 
-		wp_enqueue_script( 'bm-page-specific-css', Plugin::get_assets_url( 'scripts/dist/editor.js' ), [
-			'wp-editor',
-			'wp-components',
-			'wp-i18n',
-			'wp-data',
-			'wp-edit-post',
-			'wp-plugins',
-		], Plugin::get_version() );
+		$asset_file = Plugin::get_path( 'assets/scripts/dist/editor.asset.php' );
+
+		if ( ! file_exists( $asset_file ) ) {
+			return;
+		}
+
+		$asset = require $asset_file;
+
+		wp_enqueue_script(
+			'bm-page-specific-css',
+			Plugin::get_assets_url( 'scripts/dist/editor.js' ),
+			$asset['dependencies'],
+			$asset['version'],
+			true
+		);
+
+		wp_set_script_translations( 'bm-page-specific-css', Plugin::TEXTDOMAIN, Plugin::get_path( 'languages' ) );
 
 	}
 }

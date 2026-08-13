@@ -1,31 +1,41 @@
-# Copyright (C) 2023 Bernskiold Media
-# This file is distributed under the same license as the BM Page Specific CSS package.
+# Copyright (C) 2026 Bernskiold Media
+# This file is distributed under the same license as the BM Page Specific CSS plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: BM Page Specific CSS 1.1.0\n"
-"Report-Msgid-Bugs-To: "
-"https://wordpress.org/support/plugin/bm-page-specific-css\n"
-"POT-Creation-Date: 2023-03-24 13:28:05+00:00\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2023-MO-DA HO:MI+ZONE\n"
+"Project-Id-Version: BM Page Specific CSS 1.2.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/bm-page-specific-css\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"X-Generator: node-wp-i18n 1.2.6\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-08-13T18:17:11+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: bm-page-specific-css\n"
 
-#. Plugin Name of the plugin/theme
+#. Plugin Name of the plugin
+#: bm-page-specific-css.php
 msgid "BM Page Specific CSS"
 msgstr ""
 
-#. Author URI of the plugin/theme
+#. Plugin URI of the plugin
+#. Author URI of the plugin
+#: bm-page-specific-css.php
 msgid "https://bernskioldmedia.com"
 msgstr ""
 
-#. Description of the plugin/theme
+#. Description of the plugin
+#: bm-page-specific-css.php
 msgid "Allows editors to add styles specific for pages and post."
 msgstr ""
 
-#. Author of the plugin/theme
+#. Author of the plugin
+#: bm-page-specific-css.php
 msgid "Bernskiold Media"
+msgstr ""
+
+#: assets/scripts/src/components/css-panel.js:20
+#: assets/scripts/src/components/css-panel.js:25
+msgid "Page Specific CSS"
 msgstr ""
