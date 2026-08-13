@@ -1,18 +1,20 @@
 {
   "name": "bm-page-specific-css",
-  "version": "1.1.4",
+  "version": "1.2.0",
   "description": "Allows editors to add styles specific for pages and post.",
-  "main": "assets/scripts/src/index.js",
+  "main": "assets/scripts/src/editor.js",
   "scripts": {
     "release": "npm install && composer install --no-dev -o && npm run build",
-    "setup": "composer install && npm install && npm run build",
-    "build": "npm run prod && npm run i18n",
-    "dev": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "watch": "npm run dev -- --watch",
-    "prod": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "i18n": "npm run i18n:textdomain && npm run i18n:pot",
-    "i18n:textdomain": "npx wpi18n addtextdomain --exclude=vendor,node_modules --type theme",
-    "i18n:pot": "npx wpi18n makepot  --domain-path ./languages/"
+    "setup": "npm install && composer install && npm run build",
+    "build": "wp-scripts build assets/scripts/src/editor.js --output-path=assets/scripts/dist",
+    "dev": "wp-scripts start assets/scripts/src/editor.js --output-path=assets/scripts/dist",
+    "start": "npm run dev",
+    "lint": "composer run lint",
+    "format": "wp-scripts format ./assets/scripts/src",
+    "i18n": "npm run i18n:pot",
+    "i18n:pot": "wp i18n make-pot . ./languages/bm-page-specific-css.pot --exclude=\"assets/scripts/dist\"",
+    "i18n:makejed": "wp i18n make-json languages --no-purge",
+    "packages-update": "wp-scripts packages-update"
   },
   "author": {
     "name": "Bernskiold Media",
@@ -21,16 +23,10 @@
     "role": "developer"
   },
   "devDependencies": {
-    "@babel/preset-react": "^7.10.4",
-    "babel-preset-react": "^6.24",
-    "cross-env": "^6.0",
-    "laravel-mix": "^5.0",
-    "node-wp-i18n": "^1.2",
-    "prettier": "^2.0",
-    "vue-template-compiler": "^2.6"
+    "@wordpress/scripts": "^34.1.0"
   },
   "dependencies": {
-    "ace-builds": "^1.4.11",
-    "react-ace": "^9.1.1"
+    "ace-builds": "^1.44.0",
+    "react-ace": "^15.0.0"
   }
 }

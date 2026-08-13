@@ -17,9 +17,9 @@
 # Ignore node_modules
 node_modules/
 
-# Ignore built assets.
-assets/scripts/dist/**
-mix-manifest.json
+# The built assets in assets/scripts/dist are committed on purpose: the plugin
+# is distributed as a Composer package built from a git archive, so anything
+# not in the repository is missing from the release.
 
 # Ignore .idea
 .idea

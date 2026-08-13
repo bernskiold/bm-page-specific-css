@@ -3,9 +3,11 @@
  * Plugin Name: BM Page Specific CSS
  * Plugin URI:  https://bernskioldmedia.com
  * Description: Allows editors to add styles specific for pages and post.
- * Version:     1.1.4
+ * Version:     1.2.0
  * Author:      Bernskiold Media
  * Author URI:  https://bernskioldmedia.com
+ * Requires at least: 6.6
+ * Requires PHP: 7.2
  * Text Domain: bm-page-specific-css
  * Domain Path: /languages/
  *
