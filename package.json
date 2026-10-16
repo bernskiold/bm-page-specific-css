@@ -23,7 +23,7 @@
     "role": "developer"
   },
   "devDependencies": {
-    "@wordpress/scripts": "^34.1.0"
+    "@wordpress/scripts": "^36.0.0"
   },
   "dependencies": {
     "ace-builds": "^1.44.0",
