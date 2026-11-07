@@ -1,6 +1,10 @@
 import { __ } from '@wordpress/i18n';
-import { dispatch, select } from '@wordpress/data';
-import { PluginSidebar, PluginSidebarMoreMenuItem } from '@wordpress/editor';
+import { useDispatch, useSelect } from '@wordpress/data';
+import {
+	PluginSidebar,
+	PluginSidebarMoreMenuItem,
+	store as editorStore,
+} from '@wordpress/editor';
 import AceEditor from 'react-ace';
 
 // These has to come after the AceEditor import. Bundling the snippets rather
@@ -13,18 +17,43 @@ import 'ace-builds/src-noconflict/snippets/css';
 
 export const PANEL_ICON = 'editor-code';
 
+/**
+ * The post meta key the styles are stored in. Must match
+ * Plugin::CSS_META_KEY on the PHP side.
+ */
+export const META_KEY = 'page_specific_styles';
+
+const SIDEBAR_NAME = 'bm-page-specific-css-sidebar';
+
 export default function CSSPanel() {
+	// Subscribing through useSelect re-renders the editor when the meta
+	// changes from elsewhere (undo/redo, switching revisions, a reload after
+	// save). Reading with select() once during render did not.
+	const value = useSelect(
+		( select ) =>
+			select( editorStore ).getEditedPostAttribute( 'meta' )?.[
+				META_KEY
+			] ?? '',
+		[]
+	);
+
+	const { editPost } = useDispatch( editorStore );
+
+	const onChange = ( newValue ) => {
+		editPost( { meta: { [ META_KEY ]: newValue } } );
+	};
+
 	return (
 		<>
 			<PluginSidebarMoreMenuItem
-				target="bm-page-specific-css-sidebar"
+				target={ SIDEBAR_NAME }
 				icon={ PANEL_ICON }
 			>
 				{ __( 'Page Specific CSS', 'bm-page-specific-css' ) }
 			</PluginSidebarMoreMenuItem>
 
 			<PluginSidebar
-				name="bm-page-specific-css-sidebar"
+				name={ SIDEBAR_NAME }
 				title={ __( 'Page Specific CSS', 'bm-page-specific-css' ) }
 				icon={ PANEL_ICON }
 			>
@@ -40,7 +69,7 @@ export default function CSSPanel() {
 					showPrintMargin={ false }
 					showGutter={ true }
 					highlightActiveLine={ true }
-					value={ getCSSValue() }
+					value={ value }
 					enableBasicAutocompletion={ true }
 					enableLiveAutocompletion={ true }
 					enableSnippets={ true }
@@ -49,21 +78,4 @@ export default function CSSPanel() {
 			</PluginSidebar>
 		</>
 	);
-}
-
-function getCSSValue() {
-	const meta = select( 'core/editor' ).getEditedPostAttribute( 'meta' );
-
-	if ( meta && meta.page_specific_styles ) {
-		return meta.page_specific_styles;
-	}
-	return '';
-}
-
-function onChange( newValue ) {
-	dispatch( 'core/editor' ).editPost( {
-		meta: {
-			page_specific_styles: newValue,
-		},
-	} );
 }
