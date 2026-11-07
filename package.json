@@ -2,19 +2,26 @@
   "name": "bm-page-specific-css",
   "version": "1.2.0",
   "description": "Allows editors to add styles specific for pages and post.",
-  "main": "assets/scripts/src/editor.js",
+  "private": true,
   "scripts": {
-    "release": "npm install && composer install --no-dev -o && npm run build",
     "setup": "npm install && composer install && npm run build",
     "build": "wp-scripts build assets/scripts/src/editor.js --output-path=assets/scripts/dist",
-    "dev": "wp-scripts start assets/scripts/src/editor.js --output-path=assets/scripts/dist",
-    "start": "npm run dev",
-    "lint": "composer run lint",
+    "start": "wp-scripts start assets/scripts/src/editor.js --output-path=assets/scripts/dist",
+    "dev": "npm run start",
+    "lint": "npm run lint:js && npm run lint:php",
+    "lint:js": "wp-scripts lint-js ./assets/scripts/src",
+    "lint:php": "composer run lint",
     "format": "wp-scripts format ./assets/scripts/src",
     "i18n": "npm run i18n:pot",
-    "i18n:pot": "wp i18n make-pot . ./languages/bm-page-specific-css.pot --exclude=\"assets/scripts/dist\"",
-    "i18n:makejed": "wp i18n make-json languages --no-purge",
+    "i18n:pot": "wp i18n make-pot . ./languages/bm-page-specific-css.pot --exclude=\"assets/scripts/src,node_modules,vendor\"",
+    "i18n:json": "wp i18n make-json languages --no-purge",
+    "check-engines": "wp-scripts check-engines",
+    "check-licenses": "wp-scripts check-licenses",
     "packages-update": "wp-scripts packages-update"
+  },
+  "engines": {
+    "node": ">=22.22.2",
+    "npm": ">=10"
   },
   "author": {
     "name": "Bernskiold Media",
@@ -22,11 +29,25 @@
     "url": "https://bernskioldmedia.com",
     "role": "developer"
   },
-  "devDependencies": {
-    "@wordpress/scripts": "^34.1.0"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bernskiold/bm-page-specific-css.git"
   },
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/bernskiold/bm-page-specific-css/issues"
+  },
+  "homepage": "https://github.com/bernskiold/bm-page-specific-css#readme",
   "dependencies": {
-    "ace-builds": "^1.44.0",
+    "@wordpress/data": "^11.1.0",
+    "@wordpress/editor": "^16.1.0",
+    "@wordpress/element": "^10.1.0",
+    "@wordpress/i18n": "^7.1.0",
+    "@wordpress/plugins": "^8.1.0",
+    "ace-builds": "^1.45.2",
     "react-ace": "^15.0.0"
+  },
+  "devDependencies": {
+    "@wordpress/scripts": "^37.1.0"
   }
 }

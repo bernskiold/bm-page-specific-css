@@ -1,30 +1,29 @@
 <?php
 /**
- * WordPress Class Autoloader
+ * Class autoloader for the plugin's own classes.
+ *
+ * Maps BernskioldMedia\WP\PageSpecificCSS\Generate_Files to
+ * src/generate-files.php, following the WordPress file naming convention.
+ *
+ * @package BernskioldMedia\WP\PageSpecificCSS
  */
+
+defined( 'ABSPATH' ) || exit;
+
 spl_autoload_register(
-	function ( $classname ) {
+	static function ( string $classname ): void {
+		$prefix = 'BernskioldMedia\\WP\\PageSpecificCSS\\';
 
-		// Remove base.
-		$classname = str_replace( 'BernskioldMedia\\WP\\PageSpecificCSS\\', '', $classname );
-
-		// Regular
-		$class     = str_replace( '\\', DIRECTORY_SEPARATOR, strtolower( $classname ) );
-		$classpath = __DIR__ . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . $class . '.php';
-
-		// WordPress
-		$parts   = explode( '\\', $classname );
-		$class   = strtolower( array_pop( $parts ) );
-		$class   = str_replace( '_', '-', $class );
-		$folders = strtolower( implode( DIRECTORY_SEPARATOR, $parts ) );
-		$folders = str_replace( '_', '-', $folders );
-		$wppath  = __DIR__ . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . $folders . DIRECTORY_SEPARATOR . $class . '.php';
-
-		if ( file_exists( $classpath ) ) {
-			  require_once $classpath;
-		} elseif ( file_exists( $wppath ) ) {
-			require_once $wppath;
+		if ( 0 !== strpos( $classname, $prefix ) ) {
+			return;
 		}
 
+		$relative = substr( $classname, strlen( $prefix ) );
+		$relative = str_replace( [ '\\', '_' ], [ DIRECTORY_SEPARATOR, '-' ], strtolower( $relative ) );
+		$path     = __DIR__ . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . $relative . '.php';
+
+		if ( file_exists( $path ) ) {
+			require_once $path;
+		}
 	}
 );

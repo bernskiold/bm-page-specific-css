@@ -28,24 +28,27 @@ class Assets {
 
 		// Scripts.
 		add_action( 'enqueue_block_editor_assets', [ self::class, 'block_editor_scripts' ] );
-
 	}
 
 	/**
 	 * Enqueue Styles on public side
 	 **/
-	public static function public_styles() {
+	public static function public_styles(): void {
 
-		global $post;
-
-		if ( ! $post ) {
+		// Only on the single view of the post the styles belong to. Reading
+		// the global $post also matched archives and the blog page, which
+		// then loaded the stylesheet of whichever post came first.
+		if ( ! is_singular() ) {
 			return;
 		}
 
-		if ( 'true' === get_post_meta( $post->ID, 'has_page_specific_css', true ) ) {
-			wp_enqueue_style( 'page-' . $post->ID, Generate_Files::get_file_url( $post->ID ), [], Generate_Files::get_file_version( $post->ID ), 'all' );
+		$post_id = get_queried_object_id();
+
+		if ( ! $post_id || 'true' !== get_post_meta( $post_id, Plugin::HAS_CSS_META_KEY, true ) ) {
+			return;
 		}
 
+		wp_enqueue_style( 'page-' . $post_id, Generate_Files::get_file_url( $post_id ), [], Generate_Files::get_file_version( $post_id ), 'all' );
 	}
 
 	/**
@@ -55,7 +58,7 @@ class Assets {
 	 * script handles it was compiled against and a content hash, so we
 	 * read the dependencies from there instead of listing them by hand.
 	 **/
-	public static function block_editor_scripts() {
+	public static function block_editor_scripts(): void {
 
 		$asset_file = Plugin::get_path( 'assets/scripts/dist/editor.asset.php' );
 
@@ -74,6 +77,5 @@ class Assets {
 		);
 
 		wp_set_script_translations( 'bm-page-specific-css', Plugin::TEXTDOMAIN, Plugin::get_path( 'languages' ) );
-
 	}
 }

@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<ruleset name="BM Page Specific CSS">
+	<description>Coding standards for BM Page Specific CSS.</description>
+
+	<file>.</file>
+
+	<exclude-pattern>/assets/scripts/dist/*</exclude-pattern>
+	<exclude-pattern>/node_modules/*</exclude-pattern>
+	<exclude-pattern>/vendor/*</exclude-pattern>
+
+	<arg name="extensions" value="php"/>
+	<arg name="colors"/>
+	<arg value="sp"/>
+
+	<config name="testVersion" value="8.1-"/>
+	<config name="minimum_wp_version" value="6.6"/>
+
+	<rule ref="PHPCompatibilityWP"/>
+
+	<rule ref="WordPress">
+		<!-- The plugin uses short array syntax throughout. -->
+		<exclude name="Universal.Arrays.DisallowShortArraySyntax"/>
+		<!-- Class files are named after the class (plugin.php), not class-plugin.php. -->
+		<exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+	</rule>
+
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="bm-page-specific-css"/>
+			</property>
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="bm_page_specific_css"/>
+				<element value="BernskioldMedia\WP\PageSpecificCSS"/>
+			</property>
+		</properties>
+	</rule>
+</ruleset>
