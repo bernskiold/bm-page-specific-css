@@ -67,6 +67,21 @@ class GenerateFilesTest extends TestCase {
 		$this->assertSame( content_url( "page-specific/css/page-{$post_id}.css" ), Generate_Files::get_file_url( $post_id ) );
 	}
 
+	public function test_file_url_follows_the_content_url_filter(): void {
+		$post_id = $this->create_post( [ 'post_type' => 'page' ] );
+
+		// A CDN or an HTTPS rewrite filters content_url(); the raw
+		// WP_CONTENT_URL constant would bypass it.
+		$filter = static fn( string $url, string $path ): string => 'https://cdn.example.org/content/' . $path;
+		add_filter( 'content_url', $filter, 10, 2 );
+
+		try {
+			$this->assertSame( "https://cdn.example.org/content/page-specific/css/page-{$post_id}.css", Generate_Files::get_file_url( $post_id ) );
+		} finally {
+			remove_filter( 'content_url', $filter, 10 );
+		}
+	}
+
 	public function test_saving_through_rest_writes_the_new_styles(): void {
 		wp_set_current_user( self::factory()->user->create( [ 'role' => 'editor' ] ) );
 

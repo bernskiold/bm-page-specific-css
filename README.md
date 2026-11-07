@@ -3,8 +3,8 @@ Adds a Gutenberg panel where you can add specific page-specific CSS.
 This is then saved into files, minified and included only only on the very specific page it is created for.
 
 ## Requirements
-- WordPress 6.6 or later
-- PHP 8.1 or later
+- WordPress 7.0 or later
+- PHP 8.2 or later
 
 ## Installation
 Install with Composer (`bernskioldmedia/bm-page-specific-css`). The plugin uses
@@ -20,7 +20,7 @@ Use the `bm_page_specific_css_post_types` filter to choose which post types the
 styles are available for.
 
 ## Development
-Requires Node 24 (see `.nvmrc`) and Composer.
+Requires Node 26 (see `.nvmrc`) and Composer.
 
 ```bash
 npm run setup   # npm install, composer install and build

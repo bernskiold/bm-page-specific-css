@@ -24,8 +24,8 @@
     "env:stop": "wp-env stop"
   },
   "engines": {
-    "node": ">=22.22.2",
-    "npm": ">=10"
+    "node": ">=26",
+    "npm": ">=11"
   },
   "author": {
     "name": "Bernskiold Media",

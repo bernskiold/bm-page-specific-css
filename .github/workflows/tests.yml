@@ -22,19 +22,22 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                # The plugin's floor (PHP 8.1, WordPress 6.6) up to the newest.
-                php: ['8.1', '8.2', '8.3', '8.4']
-                wp: ['6.6', 'latest']
-                include:
-                    - wp: '6.6'
-                      core: 'WordPress/WordPress#6.6'
-                    # Empty means wp-env's default: the latest release.
-                    - wp: 'latest'
-                      core: ''
-        env:
-            # Drive the PHP and WordPress versions of the wp-env containers.
-            WP_ENV_PHP_VERSION: ${{ matrix.php }}
-            WP_ENV_CORE: ${{ matrix.core }}
+                # The plugin's floor (PHP 8.2, WordPress 7.0) up to the newest.
+                php: ['8.2', '8.3', '8.4', '8.5']
+                wp: ['7.0', 'latest']
+        services:
+            mysql:
+                image: mysql:8.0
+                env:
+                    MYSQL_ROOT_PASSWORD: root
+                    MYSQL_DATABASE: wordpress_tests
+                ports:
+                    - 3306:3306
+                options: >-
+                    --health-cmd="mysqladmin ping -h 127.0.0.1 -proot"
+                    --health-interval=10s
+                    --health-timeout=5s
+                    --health-retries=10
         steps:
             - uses: actions/checkout@v4
 
@@ -42,29 +45,15 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: ${{ matrix.php }}
+                  extensions: mysqli
                   tools: composer
                   coverage: none
 
-            # Installs PHPUnit and the minifier into vendor/, which wp-env
-            # mounts into the containers along with the plugin.
             - name: Install Composer dependencies
               uses: ramsey/composer-install@v3
 
-            - name: Set up Node
-              uses: actions/setup-node@v4
-              with:
-                  node-version-file: .nvmrc
-                  cache: npm
-
-            - name: Install npm dependencies
-              run: npm ci --no-audit --no-fund
-
-            - name: Start wp-env
-              run: npm run env:start
+            - name: Install WordPress ${{ matrix.wp }} and its test library
+              run: bin/install-wp-tests.sh "${{ matrix.wp }}" wordpress_tests root root 127.0.0.1 >> "$GITHUB_ENV"
 
             - name: Run PHP tests
-              run: npm run test:php
-
-            - name: Stop wp-env
-              if: ${{ always() }}
-              run: npm run env:stop
+              run: composer test
