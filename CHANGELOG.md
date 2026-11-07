@@ -2,28 +2,6 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
-
-### Added
-- PHPUnit integration tests, run in CI for PHP 8.2–8.5 against WordPress 7.0 and the latest release. See `TESTING.md`.
-
-### Changed
-- Requires PHP 8.2 (was 7.2) and WordPress 7.0. Tested up to WordPress 7.1.
-- The stylesheet URL is built with `content_url()` instead of the `WP_CONTENT_URL` constant, so it follows the `content_url` filter (CDNs, HTTPS rewrites).
-- `@wordpress/scripts` 34 → 37, Node 26 (`.nvmrc`). The `@wordpress/*` packages the editor script imports are now declared in `package.json`.
-- `composer/installers` `^1.0 || ^2.0`.
-- Composer's autoloader is loaded only when it exists: from the plugin's own `vendor/` or from `wp-content/vendor/`. The plugin used to `require 'vendor/autoload.php'` unconditionally, which is a fatal error when the plugin is installed as a Composer package of the site and has no `vendor/` of its own. The plugin's own classes always load through `autoloader.php`.
-- When `matthiasmullie/minify` is not installed, the styles are written unminified instead of the save failing with a fatal error.
-- The editor panel reads the meta through `useSelect`, so it follows undo/redo and other changes to the meta.
-- Releases follow the same workflow as bm-block-library: publishing a GitHub release bumps the version, rebuilds, commits to `master`, moves the tag and attaches a plugin ZIP (which also carries the production `vendor/`). The changelog is updated from the release notes.
-- PHP is linted with WordPress Coding Standards (`phpcs.xml.dist`), and the build workflow lints PHP and JavaScript.
-
-### Fixed
-- The stylesheet is generated on `wp_after_insert_post` instead of `save_post`. When the block editor saves, the REST API fires `save_post` before it writes the meta, so the file was written from the previous save's styles.
-- The stylesheet is only loaded on the single view of its post. It used to check the global `$post`, so archives and the posts page loaded the styles of whichever post came first in the loop.
-- The meta is registered per post type with `register_post_meta()`. `register_meta()` was called with the post type as the object type, so only the call for `post` took effect: it registered the key for every post type, and the `bm_page_specific_css_post_types` filter could not narrow anything. Only post types shown in REST are included by default.
-- Bundled translations in `languages/` load: `load_plugin_textdomain()` was given an absolute path where it expects one relative to the plugins directory.
-
 ## [1.2.0] - 2026-08-13
 
 ### Changed
