@@ -92,4 +92,10 @@ class PluginTest extends TestCase {
 		$this->assertGreaterThanOrEqual( 400, rest_do_request( $request )->get_status() );
 		$this->assertSame( '', get_post_meta( $post_id, Plugin::CSS_META_KEY, true ) );
 	}
+
+	public function test_version_matches_plugin_header(): void {
+		$header = get_file_data( BM_PAGE_SPECIFIC_CSS_FILE_PATH, [ 'Version' => 'Version' ] );
+
+		$this->assertSame( $header['Version'], Plugin::get_version() );
+	}
 }

@@ -19,5 +19,6 @@ jobs:
         name: Tests
         uses: bernskiold/.github/.github/workflows/wordpress-plugin-tests.yml@main
         with:
-            # composer lint (phpcs) and npm run lint (ESLint + phpcs).
-            lint: true
+            php-lint: true
+            js-lint: true
+            check-dist: true
