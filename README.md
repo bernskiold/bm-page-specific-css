@@ -35,12 +35,19 @@ The built editor script in `assets/scripts/dist` is committed, because the
 release archive is built from the repository. Commit it with the source change.
 
 ## Releasing
-Publish a GitHub release with the version as its tag (`1.3.0` or `v1.3.0`).
-The *Build Release* workflow sets the version in `package.json`, the plugin
-header and `Plugin::VERSION`, rebuilds, commits to `master`, moves the tag to
-that commit and attaches `bm-page-specific-css.zip` to the release. When the
-release is published as latest, *Update Changelog* adds its notes to
-`CHANGELOG.md`.
+Run *Actions → Release → Run workflow* with the version (for example `1.3.0`,
+without a `v`), or `gh workflow run release.yml -f version=1.3.0`. The workflow:
+
+- sets the version in `package.json`, the plugin header and `Plugin::VERSION`
+- adds the notes to `CHANGELOG.md` and rebuilds
+- makes a single "Release 1.3.0" commit on `master` and tags it
+- publishes the release with `bm-page-specific-css.zip`
+- asks Satis to rebuild
+
+The notes come from a draft release tagged `1.3.0` if one exists, otherwise from
+the `notes` input, otherwise GitHub generates them. Don't publish releases or
+push tags by hand. Packagist only indexes a tag once, so the tag has to be
+created on the final release commit.
 
 ## Coding Style
 We exclusively try and use the WordPress coding practices for all languages,
