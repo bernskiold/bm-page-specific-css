@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file. This projec
 - Composer's autoloader is loaded only when it exists: from the plugin's own `vendor/` or from `wp-content/vendor/`. The plugin used to `require 'vendor/autoload.php'` unconditionally, which is a fatal error when the plugin is installed as a Composer package of the site and has no `vendor/` of its own. The plugin's own classes always load through `autoloader.php`.
 - When `matthiasmullie/minify` is not installed, the styles are written unminified instead of the save failing with a fatal error.
 - The editor panel reads the meta through `useSelect`, so it follows undo/redo and other changes to the meta.
+- Releases follow the same workflow as bm-block-library: publishing a GitHub release bumps the version, rebuilds, commits to `master`, moves the tag and attaches a plugin ZIP (which also carries the production `vendor/`). The changelog is updated from the release notes.
 - PHP is linted with WordPress Coding Standards (`.phpcs.xml.dist`), and the build workflow lints PHP and JavaScript.
 
 ### Fixed
@@ -41,9 +42,6 @@ All notable changes to this project will be documented in this file. This projec
 ## [1.1.3] - 2026-05-21
 ### Fixed
 - Fixed release archive
-
-
-## [Unreleased]
 
 ## [1.1.1] - 2023-03-24
 

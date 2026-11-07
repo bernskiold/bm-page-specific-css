@@ -32,6 +32,14 @@ npm run lint    # ESLint and PHP_CodeSniffer
 The built editor script in `assets/scripts/dist` is committed, because the
 release archive is built from the repository. Commit it with the source change.
 
+## Releasing
+Publish a GitHub release with the version as its tag (`1.3.0` or `v1.3.0`).
+The *Build Release* workflow sets the version in `package.json`, the plugin
+header and `Plugin::VERSION`, rebuilds, commits to `master`, moves the tag to
+that commit and attaches `bm-page-specific-css.zip` to the release. When the
+release is published as latest, *Update Changelog* adds its notes to
+`CHANGELOG.md`.
+
 ## Coding Style
 We exclusively try and use the WordPress coding practices for all languages,
 which includes PHP, HTML, CSS and JavaScript.
