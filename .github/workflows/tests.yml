@@ -15,45 +15,9 @@ concurrency:
     cancel-in-progress: true
 
 jobs:
-    php:
-        name: PHP ${{ matrix.php }} / WordPress ${{ matrix.wp }}
-        runs-on: ubuntu-latest
-        timeout-minutes: 20
-        strategy:
-            fail-fast: false
-            matrix:
-                # The plugin's floor (PHP 8.2, WordPress 7.0) up to the newest.
-                php: ['8.2', '8.3', '8.4', '8.5']
-                wp: ['7.0', 'latest']
-        services:
-            mysql:
-                image: mysql:8.0
-                env:
-                    MYSQL_ROOT_PASSWORD: root
-                    MYSQL_DATABASE: wordpress_tests
-                ports:
-                    - 3306:3306
-                options: >-
-                    --health-cmd="mysqladmin ping -h 127.0.0.1 -proot"
-                    --health-interval=10s
-                    --health-timeout=5s
-                    --health-retries=10
-        steps:
-            - uses: actions/checkout@v4
-
-            - name: Set up PHP
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: ${{ matrix.php }}
-                  extensions: mysqli
-                  tools: composer
-                  coverage: none
-
-            - name: Install Composer dependencies
-              uses: ramsey/composer-install@v3
-
-            - name: Install WordPress ${{ matrix.wp }} and its test library
-              run: bin/install-wp-tests.sh "${{ matrix.wp }}" wordpress_tests root root 127.0.0.1 >> "$GITHUB_ENV"
-
-            - name: Run PHP tests
-              run: composer test
+    tests:
+        name: Tests
+        uses: bernskiold/.github/.github/workflows/wordpress-plugin-tests.yml@main
+        with:
+            # composer lint (phpcs) and npm run lint (ESLint + phpcs).
+            lint: true
