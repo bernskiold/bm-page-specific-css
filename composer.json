@@ -16,7 +16,7 @@
     "issues": "https://github.com/bernskiold/bm-page-specific-css/issues"
   },
   "require": {
-    "php": ">=8.1",
+    "php": "^8.2",
     "composer/installers": "^1.0 || ^2.0",
     "matthiasmullie/minify": "^1.3"
   },
@@ -24,7 +24,7 @@
     "wp-coding-standards/wpcs": "^3.1",
     "phpcompatibility/phpcompatibility-wp": "^2.1",
     "phpunit/phpunit": "^9.6",
-    "yoast/phpunit-polyfills": "^2.0 || ^3.0"
+    "yoast/phpunit-polyfills": "^2.0 || ^3.0 || ^4.0"
   },
   "autoload": {
     "classmap": [
@@ -42,7 +42,7 @@
       "dealerdirect/phpcodesniffer-composer-installer": true
     },
     "platform": {
-      "php": "8.1"
+      "php": "8.2"
     }
   }
 }

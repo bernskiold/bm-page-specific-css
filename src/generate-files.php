@@ -101,7 +101,7 @@ class Generate_Files {
 	 * @return string
 	 */
 	protected static function get_storage_directory_uri(): string {
-		return WP_CONTENT_URL . '/page-specific/css';
+		return content_url( 'page-specific/css' );
 	}
 
 	/**
