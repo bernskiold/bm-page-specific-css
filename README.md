@@ -29,6 +29,8 @@ npm run build   # production build into assets/scripts/dist
 npm run lint    # ESLint and PHP_CodeSniffer
 ```
 
+See [TESTING.md](TESTING.md) for the test suite.
+
 The built editor script in `assets/scripts/dist` is committed, because the
 release archive is built from the repository. Commit it with the source change.
 
