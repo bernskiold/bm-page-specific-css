@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file. This projec
 
 ## [Unreleased]
 
+### Added
+- PHPUnit integration tests on `wp-env`, run in CI for PHP 8.1–8.4 against WordPress 6.6 and the latest release. See `TESTING.md`.
+
 ### Changed
 - Requires PHP 8.1 (was 7.2).
 - `@wordpress/scripts` 34 → 37, Node 24 (`.nvmrc`). The `@wordpress/*` packages the editor script imports are now declared in `package.json`.

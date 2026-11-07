@@ -1,0 +1,70 @@
+name: Tests
+
+on:
+    push:
+        branches:
+            - master
+    pull_request:
+    workflow_dispatch:
+
+permissions:
+    contents: read
+
+concurrency:
+    group: tests-${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    php:
+        name: PHP ${{ matrix.php }} / WordPress ${{ matrix.wp }}
+        runs-on: ubuntu-latest
+        timeout-minutes: 20
+        strategy:
+            fail-fast: false
+            matrix:
+                # The plugin's floor (PHP 8.1, WordPress 6.6) up to the newest.
+                php: ['8.1', '8.2', '8.3', '8.4']
+                wp: ['6.6', 'latest']
+                include:
+                    - wp: '6.6'
+                      core: 'WordPress/WordPress#6.6'
+                    # Empty means wp-env's default: the latest release.
+                    - wp: 'latest'
+                      core: ''
+        env:
+            # Drive the PHP and WordPress versions of the wp-env containers.
+            WP_ENV_PHP_VERSION: ${{ matrix.php }}
+            WP_ENV_CORE: ${{ matrix.core }}
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Set up PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ matrix.php }}
+                  tools: composer
+                  coverage: none
+
+            # Installs PHPUnit and the minifier into vendor/, which wp-env
+            # mounts into the containers along with the plugin.
+            - name: Install Composer dependencies
+              uses: ramsey/composer-install@v3
+
+            - name: Set up Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version-file: .nvmrc
+                  cache: npm
+
+            - name: Install npm dependencies
+              run: npm ci --no-audit --no-fund
+
+            - name: Start wp-env
+              run: npm run env:start
+
+            - name: Run PHP tests
+              run: npm run test:php
+
+            - name: Stop wp-env
+              if: ${{ always() }}
+              run: npm run env:stop

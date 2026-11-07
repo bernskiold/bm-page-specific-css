@@ -62,3 +62,6 @@ node_modules/
 ehthumbs.db
 Thumbs.db
 /vendor/
+
+# Test runs
+.phpunit.result.cache

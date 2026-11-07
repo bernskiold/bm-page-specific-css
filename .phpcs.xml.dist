@@ -40,4 +40,24 @@
 			</property>
 		</properties>
 	</rule>
+	<!-- Tests: test method names say what they check, and they read and
+	     delete the generated files directly. -->
+	<rule ref="Squiz.Commenting.FunctionComment">
+		<exclude-pattern>/tests/*</exclude-pattern>
+	</rule>
+	<rule ref="WordPress.Files.FileName.NotHyphenatedLowercase">
+		<exclude-pattern>/tests/*</exclude-pattern>
+	</rule>
+	<rule ref="Generic.Commenting.DocComment.MissingShort">
+		<exclude-pattern>/tests/*</exclude-pattern>
+	</rule>
+	<rule ref="WordPress.WP.AlternativeFunctions">
+		<exclude-pattern>/tests/*</exclude-pattern>
+	</rule>
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<exclude-pattern>/tests/php/bootstrap.php</exclude-pattern>
+	</rule>
+	<rule ref="WordPress.Security.EscapeOutput">
+		<exclude-pattern>/tests/php/bootstrap.php</exclude-pattern>
+	</rule>
 </ruleset>
