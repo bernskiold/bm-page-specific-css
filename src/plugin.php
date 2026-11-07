@@ -21,7 +21,7 @@ class Plugin {
 	 *
 	 * @var string
 	 */
-	protected static string $version = '2.0.0';
+	protected static string $version = '2.0.1';
 
 	/**
 	 * Plugin Textdomain
