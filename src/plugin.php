@@ -21,7 +21,7 @@ class Plugin {
 	 *
 	 * @var string
 	 */
-	protected const VERSION = '1.2.0';
+	protected static string $version = '1.2.0';
 
 	/**
 	 * Plugin Textdomain
@@ -167,6 +167,6 @@ class Plugin {
 	 * @return string
 	 */
 	public static function get_version(): string {
-		return self::VERSION;
+		return self::$version;
 	}
 }
