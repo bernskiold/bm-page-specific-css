@@ -43,8 +43,8 @@
   },
   "homepage": "https://github.com/bernskiold/bm-page-specific-css#readme",
   "dependencies": {
-    "@wordpress/data": "^11.1.0",
-    "@wordpress/editor": "^16.1.0",
+    "@wordpress/data": "^11.2.0",
+    "@wordpress/editor": "^16.2.0",
     "@wordpress/element": "^10.1.0",
     "@wordpress/i18n": "^7.1.0",
     "@wordpress/plugins": "^8.1.0",
@@ -52,7 +52,7 @@
     "react-ace": "^15.0.0"
   },
   "devDependencies": {
-    "@wordpress/env": "^12.1.0",
-    "@wordpress/scripts": "^37.1.0"
+    "@wordpress/env": "^12.2.0",
+    "@wordpress/scripts": "^37.2.0"
   }
 }
