@@ -189,6 +189,109 @@ class GenerateFilesTest extends TestCase {
 		$this->assertSame( '.first{color:blue}', file_get_contents( Generate_Files::get_file_path( $post_id ) ) );
 	}
 
+	public function test_write_file_through_a_stream_wrapper_without_stream_flush(): void {
+		// An in-memory wrapper with no stream_flush(), like many host
+		// wrappers. On PHP 8.6, file_put_contents() returns false through it
+		// even when every byte was written.
+		$wrapper = new class() {
+			/**
+			 * File contents by path.
+			 *
+			 * @var array<string, string>
+			 */
+			public static array $files = [];
+
+			/**
+			 * Whether writes store nothing.
+			 *
+			 * @var bool
+			 */
+			public static bool $fail_writes = false;
+
+			/**
+			 * Set by PHP.
+			 *
+			 * @var resource|null
+			 */
+			public $context;
+
+			/**
+			 * Path of the open file.
+			 *
+			 * @var string
+			 */
+			private string $path = '';
+
+			/**
+			 * Read position in the open file.
+			 *
+			 * @var int
+			 */
+			private int $position = 0;
+
+			public function stream_open( string $path, string $mode ): bool {
+				$this->path = $path;
+				if ( 'w' === $mode[0] ) {
+					self::$files[ $path ] = '';
+				}
+				return isset( self::$files[ $path ] );
+			}
+
+			public function stream_write( string $data ): int {
+				if ( self::$fail_writes ) {
+					return 0;
+				}
+				self::$files[ $this->path ] .= $data;
+				return strlen( $data );
+			}
+
+			public function stream_read( int $count ): string {
+				$data            = substr( self::$files[ $this->path ], $this->position, $count );
+				$this->position += strlen( $data );
+				return $data;
+			}
+
+			public function stream_eof(): bool {
+				return $this->position >= strlen( self::$files[ $this->path ] );
+			}
+
+			public function stream_stat(): array {
+				return [ 'size' => strlen( self::$files[ $this->path ] ) ];
+			}
+
+			public function url_stat( string $path ): array|false {
+				if ( ! isset( self::$files[ $path ] ) ) {
+					return false;
+				}
+
+				return [
+					'size' => strlen( self::$files[ $path ] ),
+					'mode' => 0100644,
+				];
+			}
+		};
+
+		stream_wrapper_register( 'bmtest', get_class( $wrapper ) );
+
+		try {
+			$this->assertTrue( Generate_Files::write_file( 'bmtest://page-1.css', '.a{color:red}' ) );
+			$this->assertSame( '.a{color:red}', $wrapper::$files['bmtest://page-1.css'] );
+
+			// A write that really fails must still report the failure. PHP
+			// warns about the short write, which would end the test here.
+			$wrapper::$fail_writes = true;
+			set_error_handler( static fn(): bool => true, E_WARNING ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_set_error_handler
+			try {
+				$written = Generate_Files::write_file( 'bmtest://page-1.css', '.b{color:blue}' );
+			} finally {
+				restore_error_handler();
+			}
+			$this->assertFalse( $written );
+		} finally {
+			stream_wrapper_unregister( 'bmtest' );
+		}
+	}
+
 	public function test_minify(): void {
 		$this->assertSame(
 			'.a,.b{color:#fff;margin:0}',

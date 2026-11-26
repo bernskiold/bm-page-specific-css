@@ -60,7 +60,7 @@ class Generate_Files {
 
 		self::maybe_create_directory();
 
-		if ( ! self::create_file( $post_id, self::minify( $styles ) ) ) {
+		if ( ! self::write_file( self::get_file_path( $post_id ), self::minify( $styles ) ) ) {
 			return;
 		}
 
@@ -163,15 +163,24 @@ class Generate_Files {
 	}
 
 	/**
-	 * Create the file.
+	 * Write a file.
 	 *
-	 * @param int    $post_id  Post ID.
-	 * @param string $contents Stylesheet contents.
+	 * On PHP 8.6, file_put_contents() returns false when a stream wrapper
+	 * without stream_flush() closes the file, even though every byte was
+	 * written. A false result is only trusted when the file does not hold
+	 * the contents.
 	 *
-	 * @return bool Whether the file was written.
+	 * @param string $path     File path.
+	 * @param string $contents File contents.
+	 *
+	 * @return bool Whether the file holds the contents.
 	 */
-	protected static function create_file( $post_id, $contents ): bool {
-		return false !== file_put_contents( self::get_file_path( $post_id ), $contents ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+	public static function write_file( string $path, string $contents ): bool {
+		if ( false !== file_put_contents( $path, $contents ) ) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+			return true;
+		}
+
+		return file_exists( $path ) && file_get_contents( $path ) === $contents; // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 	}
 
 	/**
