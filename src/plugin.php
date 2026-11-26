@@ -97,11 +97,15 @@ class Plugin {
 				$post_type,
 				self::CSS_META_KEY,
 				[
-					'show_in_rest'  => true,
-					'type'          => 'string',
-					'single'        => true,
-					'default'       => '',
-					'auth_callback' => static function ( $allowed, $meta_key, $post_id ) {
+					'show_in_rest'      => true,
+					'type'              => 'string',
+					'single'            => true,
+					'default'           => '',
+					// Each revision keeps the styles it was saved with, so
+					// restoring a revision restores its styles too. Core
+					// rejects this for post types without revisions.
+					'revisions_enabled' => post_type_supports( $post_type, 'revisions' ),
+					'auth_callback'     => static function ( $allowed, $meta_key, $post_id ) {
 						return current_user_can( 'edit_post', $post_id );
 					},
 				]
