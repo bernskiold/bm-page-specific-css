@@ -149,6 +149,46 @@ class GenerateFilesTest extends TestCase {
 		}
 	}
 
+	public function test_revisions_keep_their_styles_in_rest(): void {
+		wp_set_current_user( self::factory()->user->create( [ 'role' => 'editor' ] ) );
+
+		$post_id = $this->create_post();
+		$this->save_through_rest( $post_id, '.first { color: blue; }' );
+		$this->save_through_rest( $post_id, '.second { color: red; }' );
+
+		// The editor restores a revision by reading its meta from here and
+		// saving it onto the post.
+		$request = new WP_REST_Request( 'GET', "/wp/v2/posts/{$post_id}/revisions" );
+		$request->set_param( 'context', 'edit' );
+		$styles = wp_list_pluck( wp_list_pluck( rest_do_request( $request )->get_data(), 'meta' ), Plugin::CSS_META_KEY );
+
+		$this->assertContains( '.first { color: blue; }', $styles );
+		$this->assertContains( '.second { color: red; }', $styles );
+	}
+
+	public function test_restoring_a_revision_restores_its_styles_and_file(): void {
+		wp_set_current_user( self::factory()->user->create( [ 'role' => 'editor' ] ) );
+
+		$post_id = $this->create_post();
+		$this->save_through_rest( $post_id, '.first { color: blue; }' );
+
+		$first = null;
+		foreach ( wp_get_post_revisions( $post_id ) as $revision ) {
+			if ( '.first { color: blue; }' === get_metadata( 'post', $revision->ID, Plugin::CSS_META_KEY, true ) ) {
+				$first = $revision;
+			}
+		}
+		$this->assertNotNull( $first, 'No revision holds the first styles.' );
+
+		$this->save_through_rest( $post_id, '.second { color: red; }' );
+
+		// The revisions screen restores through this function.
+		wp_restore_post_revision( $first->ID );
+
+		$this->assertSame( '.first { color: blue; }', get_post_meta( $post_id, Plugin::CSS_META_KEY, true ) );
+		$this->assertSame( '.first{color:blue}', file_get_contents( Generate_Files::get_file_path( $post_id ) ) );
+	}
+
 	public function test_minify(): void {
 		$this->assertSame(
 			'.a,.b{color:#fff;margin:0}',

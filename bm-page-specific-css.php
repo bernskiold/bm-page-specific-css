@@ -7,7 +7,7 @@
  * Author:            Bernskiold Media
  * Author URI:        https://bernskioldmedia.com
  * Requires at least: 7.0
- * Tested up to:      7.1
+ * Tested up to:      7.2
  * Requires PHP:      8.2
  * Text Domain:       bm-page-specific-css
  * Domain Path:       /languages/

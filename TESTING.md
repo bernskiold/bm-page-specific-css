@@ -5,7 +5,9 @@ through the REST API the way the block editor does, writing and removing the
 stylesheets, and loading them on the front end.
 
 They run in CI (`.github/workflows/tests.yml`) on every pull request, for PHP
-8.2–8.5 against WordPress 7.0 (the minimum) and the latest release.
+8.2–8.5 against WordPress 7.0 (the minimum) and the latest release, and for
+PHP 8.6 against the latest release only. WordPress 7.0 is not compatible with
+PHP 8.6.
 
 ## Running locally
 

@@ -27,6 +27,9 @@ class Generate_Files {
 		// sees the styles from the previous save. wp_after_insert_post fires
 		// once the meta is written.
 		add_action( 'wp_after_insert_post', [ self::class, 'on_post_save' ] );
+		// Restoring a revision updates the post before core copies the
+		// revision's styles back (priority 10), so write the file again after.
+		add_action( 'wp_restore_post_revision', [ self::class, 'on_post_save' ], 20 );
 		add_action( 'delete_post', [ self::class, 'on_post_delete' ] );
 	}
 

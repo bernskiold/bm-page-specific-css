@@ -22,3 +22,12 @@ jobs:
             php-lint: true
             js-lint: true
             check-dist: true
+
+    # WordPress 7.0 core calls spl_object_hash(), which PHP 8.6 deprecates, so
+    # PHP 8.6 runs against the latest release only.
+    tests-php-8-6:
+        name: Tests (PHP 8.6)
+        uses: bernskiold/.github/.github/workflows/wordpress-plugin-tests.yml@main
+        with:
+            php-versions: '["8.6"]'
+            wp-versions: '["latest"]'
