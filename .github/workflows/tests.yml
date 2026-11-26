@@ -22,12 +22,14 @@ jobs:
             php-lint: true
             js-lint: true
             check-dist: true
+            # Drop 7.2-RC3 once 7.2 is released and "latest" picks it up.
+            wp-versions: '["7.0","latest","7.2-RC3"]'
 
     # WordPress 7.0 core calls spl_object_hash(), which PHP 8.6 deprecates, so
-    # PHP 8.6 runs against the latest release only.
+    # PHP 8.6 runs against the latest release and the 7.2 RC only.
     tests-php-8-6:
         name: Tests (PHP 8.6)
         uses: bernskiold/.github/.github/workflows/wordpress-plugin-tests.yml@main
         with:
             php-versions: '["8.6"]'
-            wp-versions: '["latest"]'
+            wp-versions: '["latest","7.2-RC3"]'

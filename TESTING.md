@@ -5,9 +5,9 @@ through the REST API the way the block editor does, writing and removing the
 stylesheets, and loading them on the front end.
 
 They run in CI (`.github/workflows/tests.yml`) on every pull request, for PHP
-8.2–8.5 against WordPress 7.0 (the minimum) and the latest release, and for
-PHP 8.6 against the latest release only. WordPress 7.0 is not compatible with
-PHP 8.6.
+8.2–8.5 against WordPress 7.0 (the minimum), the latest release and 7.2-RC3,
+and for PHP 8.6 against the latest release and 7.2-RC3 only. WordPress 7.0 is
+not compatible with PHP 8.6.
 
 ## Running locally
 
@@ -25,7 +25,9 @@ eval "$(bin/install-wp-tests.sh latest wordpress_tests root root 127.0.0.1 | sed
 composer test
 ```
 
-Pass a version such as `7.0` instead of `latest` to test the minimum.
+Pass a version such as `7.0` instead of `latest` to test the minimum, or a
+pre-release such as `7.2-RC3`. When wp-phpunit has no package for the version,
+the script takes the test library from wordpress-develop instead.
 `bin/install-wp-tests.sh` prints the `WP_PHPUNIT__DIR` and
 `WP_PHPUNIT__TESTS_CONFIG` variables PHPUnit needs.
 
